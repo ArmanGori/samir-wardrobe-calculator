@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Samir Wardrobe Calculator dashboard for calculating wardrobe measurements and tracking saved estimates."
+    />
+    <meta name="theme-color" content="#0f172a" />
+    <title>Samir Wardrobe Calculator</title>
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar" aria-label="Application header">
+        <div class="brand" aria-label="Samir Wardrobe Calculator">
+          <span class="brand-mark" aria-hidden="true">SW</span>
+          <div>
+            <p class="eyebrow">Manufacturing dashboard</p>
+            <h1>Samir Wardrobe Calculator</h1>
+          </div>
+        </div>
+      </header>
+
+      <main class="app-main">
+        <nav class="primary-nav" aria-label="Main navigation">
+          <button class="nav-button active" type="button" data-view="dashboard" aria-selected="true">
+            Dashboard
+          </button>
+          <button class="nav-button" type="button" data-view="new-calculation" aria-selected="false">
+            New Calculation
+          </button>
+          <button class="nav-button" type="button" data-view="history" aria-selected="false">
+            History
+          </button>
+          <button class="nav-button" type="button" data-view="settings" aria-selected="false">
+            Settings
+          </button>
+        </nav>
+
+        <section id="dashboard" class="view active" role="tabpanel" aria-label="Dashboard screen">
+          <div class="summary-panel" aria-label="Summary statistics">
+            <div class="summary-item">
+              <span class="summary-label">Saved calculations</span>
+              <strong id="savedCalculationsCount">12</strong>
+            </div>
+            <div class="summary-item">
+              <span class="summary-label">Wardrobe entries</span>
+              <strong id="wardrobeEntriesCount">28</strong>
+            </div>
+          </div>
+
+          <div class="action-grid" aria-label="Main actions">
+            <button class="action-card" type="button" data-view="new-calculation">
+              <span class="card-icon" aria-hidden="true">+</span>
+              <span class="card-title">New Calculation</span>
+              <span class="card-copy">Create a fresh wardrobe estimate.</span>
+            </button>
+
+            <button class="action-card" type="button" data-view="history">
+              <span class="card-icon" aria-hidden="true">▣</span>
+              <span class="card-title">Calculation History</span>
+              <span class="card-copy">Review recent saved calculations.</span>
+            </button>
+
+            <button class="action-card" type="button" data-view="settings">
+              <span class="card-icon" aria-hidden="true">⚙</span>
+              <span class="card-title">Settings</span>
+              <span class="card-copy">Adjust workspace preferences.</span>
+            </button>
+          </div>
+        </section>
+
+        <section id="new-calculation" class="view" role="tabpanel" aria-label="New calculation screen" hidden>
+          <div class="panel">
+            <div class="section-head">
+              <div>
+                <p class="eyebrow">Start estimate</p>
+                <h2>New Calculation</h2>
+              </div>
+            </div>
+
+            <div class="calculation-header">
+              <label for="calculation-name">Calculation name</label>
+              <input
+                id="calculation-name"
+                name="calculation-name"
+                type="text"
+                value="Main Wardrobe Estimate"
+                placeholder="Enter calculation name"
+              />
+            </div>
+
+            <div class="table-wrapper">
+              <table class="wardrobe-table" aria-label="Multiple wardrobe table">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Height (in)</th>
+                    <th scope="col">Width (in)</th>
+                    <th scope="col">Sq Ft</th>
+                    <th scope="col">Include</th>
+                    <th scope="col">Action</th>
+                  </tr>
+                </thead>
+                <tbody id="wardrobe-table-body"></tbody>
+              </table>
+            </div>
+
+            <div class="table-actions">
+              <button class="secondary-button" type="button" id="add-wardrobe-button">Add Wardrobe</button>
+              <button class="primary-button" type="button" id="save-calculation-button">Save Calculation</button>
+            </div>
+
+            <div id="save-status" class="save-status" role="status" aria-live="polite" hidden></div>
+
+            <div class="summary-cards" aria-label="Calculation summary cards">
+              <div class="summary-card">
+                <span>All Wardrobes</span>
+                <strong id="summary-all">0</strong>
+              </div>
+              <div class="summary-card">
+                <span>Included Wardrobes</span>
+                <strong id="summary-included">0</strong>
+              </div>
+              <div class="summary-card">
+                <span>Excluded Wardrobes</span>
+                <strong id="summary-excluded">0</strong>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="history" class="view" role="tabpanel" aria-label="Calculation history screen" hidden>
+          <div class="panel">
+            <div class="section-head">
+              <div>
+                <p class="eyebrow">Saved entries</p>
+                <h2>Calculation History</h2>
+              </div>
+            </div>
+
+            <div class="history-controls">
+              <label for="history-search">Search by name</label>
+              <input id="history-search" type="search" placeholder="Search calculations" />
+            </div>
+
+            <div id="history-list" class="history-list" aria-live="polite"></div>
+          </div>
+        </section>
+
+        <section id="settings" class="view" role="tabpanel" aria-label="Settings screen" hidden>
+          <div class="panel">
+            <div class="section-head">
+              <div>
+                <p class="eyebrow">Workspace setup</p>
+                <h2>Settings</h2>
+              </div>
+            </div>
+
+            <div class="settings-list" aria-label="Application settings">
+              <div class="setting-item">
+                <div>
+                  <h3>Display precision</h3>
+                  <p>Choose how many decimal places are shown.</p>
+                </div>
+                <label class="sr-only" for="display-precision">Display precision</label>
+                <select id="display-precision" aria-label="Display precision">
+                  <option value="2">2 decimals</option>
+                  <option value="3">3 decimals</option>
+                  <option value="4">4 decimals</option>
+                </select>
+              </div>
+
+              <div class="setting-item setting-actions">
+                <div>
+                  <h3>Backup</h3>
+                  <p>Download or restore saved calculations.</p>
+                </div>
+                <div class="inline-actions">
+                  <button class="text-button" type="button" id="export-backup-button">Export</button>
+                  <button class="text-button" type="button" id="import-backup-button">Import</button>
+                  <input id="import-backup-input" type="file" accept="application/json" hidden />
+                </div>
+              </div>
+
+              <div class="setting-item setting-actions">
+                <div>
+                  <h3>Clear data</h3>
+                  <p>Remove all saved calculations permanently.</p>
+                </div>
+                <button class="text-button danger" type="button" id="clear-all-calculations-button">Clear all</button>
+              </div>
+
+              <div class="setting-item about-box">
+                <div>
+                  <h3>About</h3>
+                  <p>Samir Wardrobe Calculator</p>
+                  <p>Version 1.0.0</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script type="module" src="js/app.js"></script>
+  </body>
+</html>
